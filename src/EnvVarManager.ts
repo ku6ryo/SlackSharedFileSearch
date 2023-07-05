@@ -25,6 +25,10 @@ class EnvVarManager {
   slackBotToken() {
     return this.getVar("SLACK_BOT_TOKEN")
   }
+
+  qdrantUrl() {
+    return this.getVar("QDRANT_URL")
+  }
 }
 
 export const envVar = new EnvVarManager()

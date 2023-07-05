@@ -1,6 +1,18 @@
 import { ChatCompletionFunctions, Configuration, OpenAIApi, ChatCompletionRequestMessage } from "openai"
 import { envVar } from "./EnvVarManager"
 
+export async function getEmbedding(text: string) {
+  const openai = new OpenAIApi(new Configuration({ apiKey: envVar.openaiApiKey() }))
+  const { data: { data, usage } } = await openai.createEmbedding({
+    model: "text-embedding-ada-002", 
+    input: text,
+  })
+  return {
+    vector: data[0].embedding,
+    tokens: usage.prompt_tokens,
+  }
+}
+
 export async function getChatCompletionWithFuncs(messages: ChatCompletionRequestMessage[], functions: ChatCompletionFunctions[]) {
   const openai = new OpenAIApi(new Configuration({ apiKey: envVar.openaiApiKey() }))
   const { data: { choices, usage } } = await openai.createChatCompletion({
