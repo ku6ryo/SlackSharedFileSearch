@@ -1,0 +1,22 @@
+import { ChatCompletionFunctions, Configuration, OpenAIApi, ChatCompletionRequestMessage } from "openai"
+import { envVar } from "./EnvVarManager"
+
+export async function getChatCompletionWithFuncs(messages: ChatCompletionRequestMessage[], functions: ChatCompletionFunctions[]) {
+  const openai = new OpenAIApi(new Configuration({ apiKey: envVar.openaiApiKey() }))
+  const { data: { choices, usage } } = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo-16k-0613",
+    messages,
+    functions,
+  })
+  if (!usage) {
+    throw new Error("usage is null")
+  }
+  if (choices.length === 0 || !choices[0].message) {
+    throw new Error("choices is empty")
+  }
+  return {
+    tokens: usage.total_tokens,
+    content: choices[0].message.content,
+    functionCall: choices[0].message.function_call || null,
+  }
+}
