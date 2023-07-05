@@ -21,6 +21,10 @@ class EnvVarManager {
   openaiApiKey() {
     return this.getVar("OPENAI_API_KEY")
   }
+
+  slackBotToken() {
+    return this.getVar("SLACK_BOT_TOKEN")
+  }
 }
 
 export const envVar = new EnvVarManager()
